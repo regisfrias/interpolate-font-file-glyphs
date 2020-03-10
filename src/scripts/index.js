@@ -39,9 +39,9 @@ sourceTextBox.addEventListener('keyup', onKeyUp);
 
 //////////////
 // Controls //
-const boldnessControl = document.querySelector('.boldness-amount');
-boldnessControl.addEventListener('input', onChangeBoldness);
-let boldenAmount = parseFloat(boldnessControl.value); // How bold the type should be (0–1)
+const thicknessControl = document.querySelector('.thickness-amount');
+thicknessControl.addEventListener('input', onChangeThickness);
+let thicknessAmount = parseFloat(thicknessControl.value); // How bold the type should be (0–1)
 //////////////
 
 
@@ -94,8 +94,8 @@ function draw() {
         const pointY = path.crds[j+1];
         const pointYDiff = diffs.crds[j+1];
 
-        const coordX = pointX + (pointXDiff * boldenAmount);
-        const coordY = pointY + (pointYDiff * boldenAmount) - ((lineNumber+0.75) * fontStrong.head.unitsPerEm);
+        const coordX = pointX + (pointXDiff * thicknessAmount);
+        const coordY = pointY + (pointYDiff * thicknessAmount) - ((lineNumber+0.75) * fontStrong.head.unitsPerEm);
 
         tpath.crds.push(coordX);
         tpath.crds.push(coordY);
@@ -107,7 +107,7 @@ function draw() {
 
       // Push letter to the right by the width of the glyph
       // Also compensate for font weight (if thin, this should be smaller)
-      x += fontMild.hmtx.aWidth[gid] + (diff * boldenAmount);
+      x += fontMild.hmtx.aWidth[gid] + (diff * thicknessAmount);
 
       if(i<gls.length-1) x += Typr.U.getPairAdjustment(fontStrong, gid, gid2);
     }
@@ -123,8 +123,8 @@ function onKeyUp(evt) {
   requestAnimationFrame(draw);  // Update canvas.
 }
 
-function onChangeBoldness(evt) {
-  boldenAmount = parseFloat(evt.target.value);
+function onChangeThickness(evt) {
+  thicknessAmount = parseFloat(evt.target.value);
   requestAnimationFrame(draw);
 }
 
