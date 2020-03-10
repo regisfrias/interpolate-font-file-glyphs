@@ -31,6 +31,7 @@ Follow through the `index.js` file comments, but here is an overview:
 3. Trigger the drawing function, which will print things on screen.
 4. Set canvas width to match sourceTextBox (what we really want is to replace the original HTML text with the canvas).
 5. Lay out text based on the text box.
+6. Loop through each line of laid out text.
 
 
 

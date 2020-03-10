@@ -3,21 +3,31 @@ $pink: #FF9999;
 $blue: #9999FF;
 
 @font-face {
-  font-family: Merriweather;
-  src: url(../../public/fonts/Merriweather-Black.ttf);
+  font-family: RobotoSlab;
+  src: url(../../public/fonts/RobotoSlab-Black.ttf);
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: RobotoSlab;
+  src: url(../../public/fonts/RobotoSlab-Thin.ttf);
+  font-weight: 100;
 }
 
 body {
   font-size: 16px;
   color: $black;
-  font-family: 'Merriweather', serif;
+  font-family: 'RobotoSlab', serif;
+  font-weight: 100;
 }
 
 .text-source {
-  font-family: 'Merriweather', serif;
+  font-family: 'RobotoSlab', serif;
+  line-height: 1;
   font-size: 3.6rem;
   max-width: 40rem;
   border: 1px solid $pink;
+  font-weight: 900;
 }
 
 .text-box {

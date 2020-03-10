@@ -63,3 +63,11 @@ function measureWord(font, gls){
 	}
 	return x;
 };
+
+// Difference between bold and light paths
+export const pathDiffs = (pathMild, pathStrong) => {
+  return {
+    cmds: pathMild.cmds,
+    crds: pathMild.crds.map( (crd, i) => pathStrong.crds[i] - crd)
+  };
+};

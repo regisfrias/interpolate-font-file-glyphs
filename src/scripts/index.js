@@ -1,15 +1,15 @@
 import '../styles/index.scss';
 import Typr from 'typr.js'; // Library to load and parse the font files [TODO: link]
 import autosize from 'autosize';
-import MerriweatherStrong from '../../public/fonts/Merriweather-Black.ttf'; // Bold font
-import MerriweatherMild from '../../public/fonts/Merriweather-Light.ttf';   // Light font
-import { loadFont, getDPR, layoutText } from './utils';
+import RobotoSlabBlack from '../../public/fonts/RobotoSlab-Black.ttf'; // Bold font
+import RobotoSlabThin from '../../public/fonts/RobotoSlab-Thin.ttf';   // Thin font
+import { loadFont, getDPR, layoutText, pathDiffs } from './utils';
 
 ////////////////
 // Load fonts //
 // 1.1. Load fonts as promises (see 'utils.js')
-const fontStrongBuffer = loadFont(MerriweatherStrong);
-const fontMildBuffer = loadFont(MerriweatherMild);
+const fontStrongBuffer = loadFont(RobotoSlabBlack);
+const fontMildBuffer = loadFont(RobotoSlabThin);
 let fontStrong;
 let fontMild;
 ////////////////
@@ -19,6 +19,9 @@ let fontMild;
 const canvas = document.querySelector(".text-box");
 const sourceTextBox = document.querySelector(".text-source");
 const textColor = window.getComputedStyle(sourceTextBox, null).color || '#000000';
+const lineHeight = window.getComputedStyle(sourceTextBox, null).lineHeight || '1';
+console.log('lineHeight', lineHeight);
+
 let fontSize = window.getComputedStyle(sourceTextBox, null).fontSize.split('px')[0];
 let sourceText = sourceTextBox.value; // The text to be rendered on the canvas
 sourceTextBox.addEventListener('keyup', onKeyUp);
@@ -58,12 +61,59 @@ function draw() {
   //    The sourceText comes as a continuous string,
   //    so we need to break lines according to font size
   //    and amount of text.
-  const laidoutText = layoutText(sourceText, fontStrong, scale, canvas.width);
-  console.log('laidoutText', laidoutText);
+  const laidoutText = layoutText(sourceText, fontStrong, scale, canvas.width);  
+  let tpath = {cmds:[], crds:[]};
+
+  // 6. Loop through each line of laid out text.
+  laidoutText.map( (txt, lineNumber ) => {
+    // Get glyph IDs    
+    const gls = Typr.U.stringToGlyphs(fontStrong, txt);
+
+    // Initialise x
+    let x = 0;
+
+    for(var i=0; i<gls.length; i++) {
+      var gid = gls[i];
+      if(gid==-1) continue;
+
+      var gid2 = (i<gls.length-1 && gls[i+1]!=-1)  ? gls[i+1] : 0;
+      var path = Typr.U.glyphToPath(fontMild, gid);
+      var pathStrong = Typr.U.glyphToPath(fontStrong, gid);
+      const diffs = pathDiffs(path, pathStrong);
+      const boldenAmount = 1; // How bold the type should be (0–1)
+
+      for(var j=0; j<path.crds.length; j+=2) {
+        const pointX = path.crds[j] + x;
+        const pointXDiff = diffs.crds[j];
+        const pointY = path.crds[j+1];
+        const pointYDiff = diffs.crds[j+1];
+
+        const coordX = pointX + (pointXDiff * boldenAmount);
+        const coordY = pointY + (pointYDiff * boldenAmount) - ((lineNumber+0.75) * fontStrong.head.unitsPerEm);
+
+        tpath.crds.push(coordX);
+        tpath.crds.push(coordY);
+      }
+
+      for(var j=0; j<path.cmds.length; j++) tpath.cmds.push(path.cmds[j]);
+
+      const diff = fontStrong.hmtx.aWidth[gid] - fontMild.hmtx.aWidth[gid];
+
+      // Push letter to the right by the width of the glyph
+      // Also compensate for font weight (if thin, this should be smaller)
+      x += fontMild.hmtx.aWidth[gid] + (diff * boldenAmount);
+
+      if(i<gls.length-1) x += Typr.U.getPairAdjustment(fontStrong, gid, gid2);
+    }
+  });
+
+  ctx.fillStyle = textColor;
+  Typr.U.pathToContext(tpath, ctx);
+  ctx.fill('evenodd');
 }
 
 function onKeyUp(evt) {
-  sourceText = sourceTextBox.innerText; // Update sourceText with new text if there is any.
+  sourceText = sourceTextBox.value; // Update sourceText with new text if there is any.
   requestAnimationFrame(draw);  // Update canvas.
 }
 
