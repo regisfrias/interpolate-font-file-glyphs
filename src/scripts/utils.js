@@ -49,7 +49,6 @@ export const layoutText = (text, font, scale, boxWidth) => {
   return layedoutText;
 };
 
-
 // Measure the width of a word in ems
 function measureWord(font, gls){
 	var x = 0;

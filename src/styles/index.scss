@@ -21,17 +21,36 @@ body {
   font-weight: 100;
 }
 
+.wrapper {
+  max-width: 40rem;
+  margin: auto;
+}
+
 .text-source {
   font-family: 'RobotoSlab', serif;
   line-height: 1;
   font-size: 3.6rem;
-  max-width: 40rem;
-  border: 1px solid $pink;
+  width: 100%;
   font-weight: 900;
+  resize: none;
+  margin-bottom: 2rem;
 }
 
 .text-box {
-  font-size: 4rem;
-  max-width: 40rem;
   border: 1px solid $blue;
+}
+
+.boldness {
+  display: flex;
+  span {
+    display: block;
+  }
+  input {
+    display: block;
+    margin: 0 1em;
+  }
+}
+
+footer {
+  margin: 2rem 0;
 }

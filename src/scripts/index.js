@@ -12,20 +12,6 @@ const fontStrongBuffer = loadFont(RobotoSlabBlack);
 const fontMildBuffer = loadFont(RobotoSlabThin);
 let fontStrong;
 let fontMild;
-////////////////
-
-//////////////
-// Text box //
-const canvas = document.querySelector(".text-box");
-const sourceTextBox = document.querySelector(".text-source");
-const textColor = window.getComputedStyle(sourceTextBox, null).color || '#000000';
-const lineHeight = window.getComputedStyle(sourceTextBox, null).lineHeight || '1';
-console.log('lineHeight', lineHeight);
-
-let fontSize = window.getComputedStyle(sourceTextBox, null).fontSize.split('px')[0];
-let sourceText = sourceTextBox.value; // The text to be rendered on the canvas
-sourceTextBox.addEventListener('keyup', onKeyUp);
-//////////////
 
 Promise.all([fontStrongBuffer, fontMildBuffer]).then(function(fonts) {
   // 1.1. We get the fonts as a ArrayBuffers ('fonts')
@@ -38,6 +24,27 @@ Promise.all([fontStrongBuffer, fontMildBuffer]).then(function(fonts) {
   //    which will print things on screen
   requestAnimationFrame(draw);
 });
+////////////////
+
+
+//////////////
+// Text box //
+const canvas = document.querySelector(".text-box");
+const sourceTextBox = document.querySelector(".text-source");
+const textColor = window.getComputedStyle(sourceTextBox, null).color || '#000000';
+let fontSize = window.getComputedStyle(sourceTextBox, null).fontSize.split('px')[0];
+let sourceText = sourceTextBox.value; // The text to be rendered on the canvas
+sourceTextBox.addEventListener('keyup', onKeyUp);
+//////////////
+
+//////////////
+// Controls //
+const boldnessControl = document.querySelector('.boldness-amount');
+boldnessControl.addEventListener('input', onChangeBoldness);
+let boldenAmount = parseFloat(boldnessControl.value); // How bold the type should be (0–1)
+//////////////
+
+
 
 function draw() {
   // Resize text source box to match content
@@ -80,7 +87,6 @@ function draw() {
       var path = Typr.U.glyphToPath(fontMild, gid);
       var pathStrong = Typr.U.glyphToPath(fontStrong, gid);
       const diffs = pathDiffs(path, pathStrong);
-      const boldenAmount = 1; // How bold the type should be (0–1)
 
       for(var j=0; j<path.crds.length; j+=2) {
         const pointX = path.crds[j] + x;
@@ -115,6 +121,11 @@ function draw() {
 function onKeyUp(evt) {
   sourceText = sourceTextBox.value; // Update sourceText with new text if there is any.
   requestAnimationFrame(draw);  // Update canvas.
+}
+
+function onChangeBoldness(evt) {
+  boldenAmount = parseFloat(evt.target.value);
+  requestAnimationFrame(draw);
 }
 
 function scaleCnv(canvas) {
