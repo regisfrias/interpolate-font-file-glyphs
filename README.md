@@ -2,6 +2,39 @@
 
 Proof of concept of interpolating points between two font files.
 
+## Installation
+
+I'm using Yarn.
+
+```
+yarn
+```
+
+## Start Dev Server
+
+```
+yarn start
+```
+
+## Build Prod Version
+
+```
+yarn run build
+```
+
+## Explanation
+
+Follow through the `index.js` file comments, but here is an overview:
+
+1. Load two fonts: bold (base) and light as `ArrayBuffers`.
+2. Parse the ArrayBuffers with `Typr.parse()` to get font objects.
+3. Trigger the drawing function, which will print things on screen.
+
+
+
+
+
+
 Based on:
 
 # Webpack Frontend Starterkit
