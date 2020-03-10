@@ -1,6 +1,27 @@
 $black: black;
+$pink: #FF9999;
+$blue: #9999FF;
+
+@font-face {
+  font-family: Merriweather;
+  src: url(../../public/fonts/Merriweather-Black.ttf);
+}
 
 body {
+  font-size: 16px;
   color: $black;
-  font-family: sans-serif;
+  font-family: 'Merriweather', serif;
+}
+
+.text-source {
+  font-family: 'Merriweather', serif;
+  font-size: 3.6rem;
+  max-width: 40rem;
+  border: 1px solid $pink;
+}
+
+.text-box {
+  font-size: 4rem;
+  max-width: 40rem;
+  border: 1px solid $blue;
 }

@@ -29,7 +29,8 @@ Follow through the `index.js` file comments, but here is an overview:
 1. Load two fonts: bold (base) and light as `ArrayBuffers`.
 2. Parse the ArrayBuffers with `Typr.parse()` to get font objects.
 3. Trigger the drawing function, which will print things on screen.
-
+4. Set canvas width to match sourceTextBox (what we really want is to replace the original HTML text with the canvas).
+5. Lay out text based on the text box.
 
 
 
