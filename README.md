@@ -32,12 +32,12 @@ Follow through the `index.js` file comments, but here is an overview:
 4. Set canvas width to match sourceTextBox (what we really want is to replace the original HTML text with the canvas).
 5. Lay out text based on the text box.
 6. Loop through each line of laid out text.
+  a. Loop through each glyph on each line.
+  b. Loop through each coordinate of each glyph.
+  c. For each coordinate multiply the amount of thickness and the diff between each font weight.
 
 
-
-
-
-Based on:
+Bootstrapped with:
 
 # Webpack Frontend Starterkit
 

@@ -70,3 +70,11 @@ export const pathDiffs = (pathMild, pathStrong) => {
     crds: pathMild.crds.map( (crd, i) => pathStrong.crds[i] - crd)
   };
 };
+
+export const distanceToPoint = (pointX, currentX, boundary1, boundary2) => {
+  const distance = Math.min(Math.abs(pointX - currentX), boundary2) / (boundary2 - boundary1); // Between 0–1
+  
+  const mapToRadians = distance * Math.PI; // Between 0–PI
+  const curve = Math.cos(mapToRadians) / 2 + 0.5;
+  return curve;
+};

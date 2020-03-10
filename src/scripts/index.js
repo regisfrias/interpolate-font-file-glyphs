@@ -3,7 +3,7 @@ import Typr from 'typr.js'; // Library to load and parse the font files [TODO: l
 import autosize from 'autosize';
 import RobotoSlabBlack from '../../public/fonts/RobotoSlab-Black.ttf'; // Bold font
 import RobotoSlabThin from '../../public/fonts/RobotoSlab-Thin.ttf';   // Thin font
-import { loadFont, getDPR, layoutText, pathDiffs } from './utils';
+import { loadFont, getDPR, layoutText, pathDiffs, distanceToPoint } from './utils';
 
 ////////////////
 // Load fonts //
@@ -39,9 +39,19 @@ sourceTextBox.addEventListener('keyup', onKeyUp);
 
 //////////////
 // Controls //
-const thicknessControl = document.querySelector('.thickness-amount');
+const thicknessControl = document.querySelector('.thickness-control');
 thicknessControl.addEventListener('input', onChangeThickness);
 let thicknessAmount = parseFloat(thicknessControl.value); // How bold the type should be (0–1)
+
+const bulgeOnOff = document.querySelector('.bulge-on-off');
+let bulge = bulgeOnOff.checked;
+bulgeOnOff.addEventListener('change', onBulge);
+const bulgeControl = document.querySelector('.bulge-control');
+bulgeControl.addEventListener('input', onChangeBulge);
+let bulgeControlWidth = window.getComputedStyle(bulgeControl, null).width.split('px')[0];
+document.querySelector('.bulge-control-wrapper').classList.add('hide');
+
+let targetPositionX = 0;
 //////////////
 
 
@@ -76,9 +86,10 @@ function draw() {
     // Get glyph IDs    
     const gls = Typr.U.stringToGlyphs(fontStrong, txt);
 
-    // Initialise x
+    // Initialise 'x' position
     let x = 0;
 
+    // 6.a Loop through each glyph.
     for(var i=0; i<gls.length; i++) {
       var gid = gls[i];
       if(gid==-1) continue;
@@ -88,27 +99,42 @@ function draw() {
       var pathStrong = Typr.U.glyphToPath(fontStrong, gid);
       const diffs = pathDiffs(path, pathStrong);
 
+      // 6.b Loop through each coordinate.
       for(var j=0; j<path.crds.length; j+=2) {
+        // Get difference between each coordinate (bold to thin)
         const pointX = path.crds[j] + x;
         const pointXDiff = diffs.crds[j];
         const pointY = path.crds[j+1];
         const pointYDiff = diffs.crds[j+1];
+        
+        // If 'bulge' is set to true
+        // get the distance between current point
+        // and bulge position (slider 0–slider width)
+        const bulgeAmount = bulge ? distanceToPoint(pointX*scale, targetPositionX * bulgeControlWidth, 0, canvas.width) : 1;        
 
-        const coordX = pointX + (pointXDiff * thicknessAmount);
-        const coordY = pointY + (pointYDiff * thicknessAmount) - ((lineNumber+0.75) * fontStrong.head.unitsPerEm);
+        // 6.c. For each coordinate multiply the amount of thickness and the diff between each font weight.
+        const coordX = pointX + (pointXDiff * thicknessAmount * bulgeAmount);
+        const coordY = pointY + (pointYDiff * thicknessAmount * bulgeAmount) - ((lineNumber+0.75) * fontStrong.head.unitsPerEm);
 
+        // Add the coordinates to the array
+        // This will be added to the canvas context by
+        // 'Typr.U.pathToContext(tpath, ctx)' (see below)
         tpath.crds.push(coordX);
         tpath.crds.push(coordY);
       }
 
       for(var j=0; j<path.cmds.length; j++) tpath.cmds.push(path.cmds[j]);
 
+      // Correct letter spacing for bulge if set.
+      const bulgeAmount = bulge ? distanceToPoint(x*scale, targetPositionX * bulgeControlWidth, 0, canvas.width) : 1;
+      
       const diff = fontStrong.hmtx.aWidth[gid] - fontMild.hmtx.aWidth[gid];
 
-      // Push letter to the right by the width of the glyph
+      // Increment 'x' position for each glyph by its width
       // Also compensate for font weight (if thin, this should be smaller)
-      x += fontMild.hmtx.aWidth[gid] + (diff * thicknessAmount);
+      x += fontMild.hmtx.aWidth[gid] + (diff * thicknessAmount * bulgeAmount);
 
+      // Adjust kerning
       if(i<gls.length-1) x += Typr.U.getPairAdjustment(fontStrong, gid, gid2);
     }
   });
@@ -125,6 +151,23 @@ function onKeyUp(evt) {
 
 function onChangeThickness(evt) {
   thicknessAmount = parseFloat(evt.target.value);
+  requestAnimationFrame(draw);
+}
+
+function onBulge(evt) {
+  bulge = evt.target.checked;
+
+  if (bulge) {
+    document.querySelector('.bulge-control-wrapper').classList.remove('hide');
+  } else {
+    document.querySelector('.bulge-control-wrapper').classList.add('hide');
+  }
+
+  requestAnimationFrame(draw);
+}
+
+function onChangeBulge(evt) {
+  targetPositionX = parseFloat(evt.target.value);
   requestAnimationFrame(draw);
 }
 

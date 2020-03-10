@@ -41,9 +41,6 @@ h1, h2, h3 {
   margin-bottom: 2rem;
 }
 
-.text-box {
-}
-
 .thickness {
   display: flex;
   span {
@@ -55,6 +52,14 @@ h1, h2, h3 {
   }
 }
 
+.bulge-control {
+  width: 100%;
+}
+
 footer {
   margin: 2rem 0;
+}
+
+.hide {
+  display: none;
 }
