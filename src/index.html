@@ -11,14 +11,16 @@
     <header>
       <h1>Interpolate font files</h1>
 
-      <p>A proof of concept for a text with continuous font thickness. This allows two separate font files (thin and a bold) to behave as if they were a single file with continous thickness — similar to OpenType font variations.</p>
+      <p>A proof of concept for a text with continuous font thickness. This allows two separate font files (thin and a bold) to behave as if they were a single file with continous thickness — similar to OpenType font variations. *</p>
     </header>
 
-    <p>Source text:</p>
+    <h2>Source text</h2>
     <textarea class="text-source" name="" id="">Non consectetur libero tenetur molestiae qui. Et sint sunt excepturi odit.</textarea>
 
+    <h2>Rendered</h2>
+
     <p>
-      Boldness:
+      Boldness
       <div class="boldness">
         <span>Thin</span>
         <input class="boldness-amount" type="range" name="" id="" min="0" max="1" step="0.01" value="1">
@@ -26,8 +28,9 @@
       </div>
     </p>
 
-    <p>Rendered:</p>
     <canvas class="text-box"></canvas>
+
+    <p>* I understand the irony of using a variable font as a static font to make it variable.</p>
 
     <footer>
       © Régis Frias 2020
