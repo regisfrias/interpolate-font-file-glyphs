@@ -54,8 +54,6 @@ document.querySelector('.bulge-control-wrapper').classList.add('hide');
 let targetPositionX = 0;
 //////////////
 
-
-
 function draw() {
   // Resize text source box to match content
   autosize(sourceTextBox);

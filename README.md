@@ -2,6 +2,8 @@
 
 Proof of concept of interpolating points between two font files.
 
+![Screenshot of the page](interpolate-font-file-glyphs.png)
+
 ## Installation
 
 I'm using Yarn.
